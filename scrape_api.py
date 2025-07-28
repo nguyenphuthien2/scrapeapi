@@ -1,9 +1,4 @@
 # Version 1.2 – cookie fallback + debug
-# Giữ nguyên từ 1.1, thêm:
-# - Tự tìm cookies.json ở project root hoặc /etc/secrets/ (Render Secret File).
-# - Ghi log cảnh báo nếu không tìm thấy cookie.
-# - Trả HTTP 500 rõ nghĩa khi thiếu cookie.
-
 import os
 import json
 import logging
@@ -31,15 +26,12 @@ def _resolve_cookie_path(path: str) -> str:
     if os.path.exists(path):
         return path
     secret_path = f"/etc/secrets/{os.path.basename(path)}"
-    if os.path.exists(secret_path):
-        return secret_path
-    return ""  # not found
+    return secret_path if os.path.exists(secret_path) else ""
 
 
 def latest_post(profile: str, limit: int = 1, cookies: str = "cookies.json") -> List[dict]:
     cookie_path = _resolve_cookie_path(cookies)
     if not cookie_path:
-        logger.error("Cookie file %s not found", cookies)
         raise FileNotFoundError("cookies.json not found in project root or /etc/secrets")
 
     start_url = f"https://mbasic.facebook.com/{profile}?v=timeline"
@@ -51,6 +43,7 @@ def latest_post(profile: str, limit: int = 1, cookies: str = "cookies.json") -> 
         start_url=start_url,
         options={"allow_extra_requests": False},
     )
+
     posts: List[dict] = []
     for post in gen:
         posts.append(
