@@ -1,4 +1,6 @@
-# Version 1.2 – cookie fallback + debug
+# Version 1.2.1 – cleanup duplicates & docstring
+# Giữ nguyên logic 1.2, xoá dòng lặp trong _resolve_cookie_path, latest_post, và scrape.
+
 import os
 import json
 import logging
@@ -9,7 +11,7 @@ from facebook_scraper import get_posts, _scraper
 
 logger = logging.getLogger("uvicorn.error")
 
-# Load mbasic headers (nếu có)
+# Load mbasic headers (nếu tồn tại)
 headers_path = os.getenv("MBASIC_HEADERS", "mbasic_headers.json")
 if os.path.exists(headers_path):
     try:
@@ -22,23 +24,26 @@ app = FastAPI()
 
 
 def _resolve_cookie_path(path: str) -> str:
-    """Trả về path cookie hợp lệ hoặc chuỗi rỗng."""
+    """Trả về đường dẫn cookie hợp lệ. Ưu tiên project root, sau đó /etc/secrets."""
     if os.path.exists(path):
         return path
-    secret = f"/etc/secrets/{os.path.basename(path)}"
-    return secret if os.path.exists(secret) else ""
+    secret_path = f"/etc/secrets/{os.path.basename(path)}"
+    return secret_path if os.path.exists(secret_path) else ""
 
 
 def latest_post(profile: str, limit: int = 1, cookies: str = "cookies.json") -> List[dict]:
-    cookie = _resolve_cookie_path(cookies)
-    if not cookie:
-        raise FileNotFoundError("cookies.json not found in project root hoặc /etc/secrets")
+    """Lấy tối đa <limit> bài mới nhất từ <profile>."""
+    cookie_path = _resolve_cookie_path(cookies)
+    if not cookie_path:
+        raise FileNotFoundError(
+            "cookies.json not found in project root hoặc /etc/secrets"
+        )
 
     start_url = f"https://mbasic.facebook.com/{profile}?v=timeline"
     gen = get_posts(
         profile,
         pages=1,
-        cookies=cookie,
+        cookies=cookie_path,
         base_url="https://mbasic.facebook.com",
         start_url=start_url,
         options={"allow_extra_requests": False},
