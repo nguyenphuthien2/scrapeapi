@@ -3,3 +3,4 @@ uvicorn
 playwright
 facebook-scraper==0.2.59
 python-dotenv
+lxml_html_clean
