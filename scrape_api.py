@@ -51,7 +51,7 @@ def latest_post(profile: str, limit: int = 1, cookies: str = "cookies.json") -> 
         start_url=start_url,
         options={"allow_extra_requests": False},
     )
-    posts = []
+    posts: List[dict] = []
     for post in gen:
         posts.append(
             {
@@ -80,7 +80,8 @@ def scrape(
     except Exception as exc:
         logger.exception("Scrape error for %s", profile)
         raise HTTPException(status_code=500, detail=str(exc))
-    
+
+
 @app.get("/")
 def root():
     return {"status": "ok"}
