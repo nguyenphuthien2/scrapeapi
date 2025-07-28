@@ -22,23 +22,23 @@ app = FastAPI()
 
 
 def _resolve_cookie_path(path: str) -> str:
-    """Tìm file cookie tại path, hoặc fallback /etc/secrets."""
+    """Trả về path cookie hợp lệ hoặc chuỗi rỗng."""
     if os.path.exists(path):
         return path
-    secret_path = f"/etc/secrets/{os.path.basename(path)}"
-    return secret_path if os.path.exists(secret_path) else ""
+    secret = f"/etc/secrets/{os.path.basename(path)}"
+    return secret if os.path.exists(secret) else ""
 
 
 def latest_post(profile: str, limit: int = 1, cookies: str = "cookies.json") -> List[dict]:
-    cookie_path = _resolve_cookie_path(cookies)
-    if not cookie_path:
-        raise FileNotFoundError("cookies.json not found in project root or /etc/secrets")
+    cookie = _resolve_cookie_path(cookies)
+    if not cookie:
+        raise FileNotFoundError("cookies.json not found in project root hoặc /etc/secrets")
 
     start_url = f"https://mbasic.facebook.com/{profile}?v=timeline"
     gen = get_posts(
         profile,
         pages=1,
-        cookies=cookie_path,
+        cookies=cookie,
         base_url="https://mbasic.facebook.com",
         start_url=start_url,
         options={"allow_extra_requests": False},
@@ -62,7 +62,7 @@ def latest_post(profile: str, limit: int = 1, cookies: str = "cookies.json") -> 
 
 @app.get("/scrape")
 def scrape(
-    profile: str = Query(..., description="Profile username hoặc ID"),
+    profile: str = Query(..., description="Username hoặc ID"),
     limit: int = Query(1, ge=1, le=5),
     cookies: str = Query("cookies.json"),
 ):
