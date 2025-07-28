@@ -1,52 +1,73 @@
-# Version 1.3 – Fix đọc cookie từ file json dạng list
-# Giữ nguyên từ 1.2, sửa: đọc cookies.json đúng định dạng list cookie
+# Version 1.1 – mbasic workaround
+# Giữ nguyên từ 1.0, thêm:
+# - Sử dụng fork facebook-scraper hỗ trợ mbasic.
+# - Header di động tuỳ chỉnh để tránh checkpoint.
+# - Thêm biến ENV MBASIC_HEADERS cho path.
+# - Hàm latest_post(profile, limit=1).
+# - Endpoint /scrape giống cũ nhưng gọi latest_post.
+# Không thay đổi interface người dùng.
 
-from fastapi import FastAPI
-from facebook_scraper import get_posts
-import traceback
+import os
 import json
+from typing import List
+
+from fastapi import FastAPI, Query, HTTPException
+from facebook_scraper import get_posts, _scraper
+
+# Load mbasic headers (tuỳ chọn)
+headers_path = os.getenv("MBASIC_HEADERS", "mbasic_headers.json")
+if os.path.exists(headers_path):
+    with open(headers_path, "r", encoding="utf-8") as f:
+        try:
+            _scraper.mbasic_headers = json.load(f)
+        except json.JSONDecodeError:
+            pass  # bỏ qua nếu file hỏng
 
 app = FastAPI()
 
-@app.get("/scrape")
-def scrape(profile: str, limit: int = 1, cookies_file: str = "cookies.json"):
-    try:
-        with open(cookies_file, "r", encoding="utf-8") as f:
-            raw = json.load(f)
-        cookies = {item["name"]: item["value"] for item in raw}
 
-        posts = []
-        for post in get_posts(profile, pages=1, cookies=cookies,
-                              options={"allow_extra_requests": True}):
-            posts.append({
+def latest_post(profile: str, limit: int = 1, cookies: str = "cookies.json") -> List[dict]:
+    """
+    Lấy <limit> bài mới nhất từ profile thông qua mbasic.facebook.com.
+    """
+    start_url = f"https://mbasic.facebook.com/{profile}?v=timeline"
+    gen = get_posts(
+        profile,
+        pages=1,
+        cookies=cookies,
+        base_url="https://mbasic.facebook.com",
+        start_url=start_url,
+        options={"allow_extra_requests": False},
+    )
+    posts = []
+    for post in gen:
+        posts.append(
+            {
                 "profile": profile,
                 "post_id": post["post_id"],
-                "content": post["text"] or "",
+                "content": post.get("text") or "",
                 "images": post.get("images", []) or ([post["image"]] if post.get("image") else []),
-                "created": post["time"].isoformat() if post["time"] else None
-            })
-            if len(posts) >= limit:
-                break
-
-        print(json.dumps(posts, indent=2, ensure_ascii=False))  # ✅ In ra để test trên server Render
-        return posts
-
-    except Exception as e:
-        traceback.print_exc()
-        return {"error": str(e)}
-
-@app.get("/")
-def read_root():
-    try:
-        profile = "tai.ngo.308279"
-        with open("cookies.json", "r", encoding="utf-8") as f:
-            raw = json.load(f)
-        cookies = {item["name"]: item["value"] for item in raw}
-
-        for post in get_posts(profile, pages=1, cookies=cookies, options={"allow_extra_requests": True}):
-            print("== RAW ==")
-            print(post)
+                "created": post["time"].isoformat() if post.get("time") else None,
+            }
+        )
+        if len(posts) >= limit:
             break
-    except Exception as e:
-        print("Lỗi khi test profile mặc định:", e)
-    return {"message": "API đang chạy ok"}
+    return posts
+
+
+@app.get("/scrape")
+def scrape(
+    profile: str = Query(..., description="Profile username hoặc ID"),
+    limit: int = Query(1, ge=1, le=5),
+    cookies: str = Query("cookies.json"),
+):
+    """
+    Endpoint tương thích với Make.com:
+    /scrape?profile=<id>&limit=1
+    """
+    if not profile:
+        raise HTTPException(status_code=400, detail="Thiếu profile")
+    try:
+        return latest_post(profile, limit, cookies)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))

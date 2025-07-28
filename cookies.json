@@ -27,7 +27,7 @@
     },
     {
         "domain": ".facebook.com",
-        "expirationDate": 1761466712.339003,
+        "expirationDate": 1761470370.61428,
         "hostOnly": false,
         "httpOnly": true,
         "name": "fr",
@@ -36,11 +36,11 @@
         "secure": true,
         "session": false,
         "storeId": null,
-        "value": "1uvD1BnjVaGrmYcZm.AWenaxfhCZJzzjjgY_tPzIJC2j8jN2R_c77SIEWo12lIvFr3hco.BohzJY..AAA.0.0.BohzJY.AWc_Xtv2GtEN_90tdCapvicanpg"
+        "value": "14qn3ev982h0tMXDB.AWcxXDtyh5pNR53x9IDSyB9AmgQdqHV09UeZ_LU7wxIoo5X1HSM.Boh0Cj..AAA.0.0.Boh0Cj.AWewshEJYLNUg_uzFvRqISiEMY8"
     },
     {
         "domain": ".facebook.com",
-        "expirationDate": 1785226712.339052,
+        "expirationDate": 1785230370.614329,
         "hostOnly": false,
         "httpOnly": true,
         "name": "xs",
@@ -49,11 +49,11 @@
         "secure": true,
         "session": false,
         "storeId": null,
-        "value": "48%3A32YC-38EHpEfQQ%3A2%3A1753617531%3A-1%3A-1%3A%3AAcXmFY5yRaY1Cu5AvAiHxRBah2AuMseYkrjpW9esjw"
+        "value": "48%3A32YC-38EHpEfQQ%3A2%3A1753617531%3A-1%3A-1%3A%3AAcXPS3bcawroxLhueJKIG_CTQXtjKX4Cv2-0cIPGGA"
     },
     {
         "domain": ".facebook.com",
-        "expirationDate": 1785226712.338886,
+        "expirationDate": 1785230370.614196,
         "hostOnly": false,
         "httpOnly": false,
         "name": "c_user",
@@ -74,7 +74,7 @@
         "secure": true,
         "session": true,
         "storeId": null,
-        "value": "C%7B%22t3%22%3A%5B%5D%2C%22utc3%22%3A1753689593242%2C%22v%22%3A1%7D"
+        "value": "C%7B%22t3%22%3A%5B%5D%2C%22utc3%22%3A1753694172772%2C%22v%22%3A1%7D"
     },
     {
         "domain": ".facebook.com",
@@ -116,7 +116,7 @@
     },
     {
         "domain": ".facebook.com",
-        "expirationDate": 1754294392,
+        "expirationDate": 1754298972,
         "hostOnly": false,
         "httpOnly": false,
         "name": "wd",
@@ -125,6 +125,6 @@
         "secure": true,
         "session": false,
         "storeId": null,
-        "value": "1920x953"
+        "value": "1920x993"
     }
 ]
