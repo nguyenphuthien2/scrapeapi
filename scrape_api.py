@@ -80,3 +80,7 @@ def scrape(
     except Exception as exc:
         logger.exception("Scrape error for %s", profile)
         raise HTTPException(status_code=500, detail=str(exc))
+    
+@app.get("/")
+def root():
+    return {"status": "ok"}
