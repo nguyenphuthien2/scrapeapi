@@ -1,0 +1,4 @@
+git config --global user.name "thien"
+git config --global user.email "autobo.ai@gmail.com"
+git remote add origin https://github.com/phunguyen1231/scrape_api.git
+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

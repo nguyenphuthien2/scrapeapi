@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+playwright
+facebook-scraper==0.2.59
+python-dotenv
