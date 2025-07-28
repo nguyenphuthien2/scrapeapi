@@ -1,5 +1,5 @@
-# Version 1.1 – Thêm dòng in JSON
-# Giữ nguyên từ 1.0, thêm: print kết quả bài viết để test
+# Version 1.2 – Debug post raw server
+# Giữ nguyên từ 1.1, thêm: in bài viết raw tại root để debug
 
 from fastapi import FastAPI
 from facebook_scraper import get_posts
@@ -14,7 +14,6 @@ def scrape(profile: str, limit: int = 1, cookies: str = "cookies.json"):
         posts = []
         for post in get_posts(profile, pages=1, cookies=cookies,
                               options={"allow_extra_requests": True}):
-            print(post)  # ✅ Thêm dòng này để in từng bài viết raw
             posts.append({
                 "profile": profile,
                 "post_id": post["post_id"],
@@ -34,4 +33,10 @@ def scrape(profile: str, limit: int = 1, cookies: str = "cookies.json"):
 
 @app.get("/")
 def read_root():
+    profile = "tai.ngo.308279"
+    cookies = "cookies.json"
+    for post in get_posts(profile, pages=1, cookies=cookies, options={"allow_extra_requests": True}):
+        print("== RAW ==")
+        print(post)
+        break
     return {"message": "API đang chạy ok"}
