@@ -1,5 +1,5 @@
 fastapi
-uvicorn
+uvicorn[standard]
 playwright
 git+https://github.com/moda20/facebook-scraper.git#egg=facebook-scraper
 python-dotenv
