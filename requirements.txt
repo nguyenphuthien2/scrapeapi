@@ -1,5 +1,5 @@
 fastapi
-uvicorn[standard]
+uvicorn[standard]          #  ← dùng cú pháp có [standard]
 playwright
 git+https://github.com/moda20/facebook-scraper.git#egg=facebook-scraper
 python-dotenv
