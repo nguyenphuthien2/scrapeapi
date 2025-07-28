@@ -22,3 +22,6 @@ def scrape(
         if len(posts) >= limit:
             break
     return posts
+@app.get("/")
+def read_root():
+    return {"message": "API đang chạy ok"}
