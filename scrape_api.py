@@ -14,6 +14,7 @@ def scrape(profile: str, limit: int = 1, cookies: str = "cookies.json"):
         posts = []
         for post in get_posts(profile, pages=1, cookies=cookies,
                               options={"allow_extra_requests": True}):
+            print(post)  # ✅ Thêm dòng này để in từng bài viết raw
             posts.append({
                 "profile": profile,
                 "post_id": post["post_id"],
