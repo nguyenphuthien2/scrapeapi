@@ -1,0 +1,6 @@
+.env
+cookies.json
+*.txt
+*.docx
+venv/
+__pycache__/
