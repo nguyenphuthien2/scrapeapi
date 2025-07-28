@@ -1,6 +1,6 @@
 fastapi
 uvicorn
 playwright
-git+https://gitflic.ru/project/paul2la/facebook-scraper.git#egg=facebook-scraper
+git+https://github.com/moda20/facebook-scraper.git#egg=facebook-scraper
 python-dotenv
 lxml_html_clean
