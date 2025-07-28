@@ -33,10 +33,13 @@ def scrape(profile: str, limit: int = 1, cookies: str = "cookies.json"):
 
 @app.get("/")
 def read_root():
-    profile = "tai.ngo.308279"
-    cookies = "cookies.json"
-    for post in get_posts(profile, pages=1, cookies=cookies, options={"allow_extra_requests": True}):
-        print("== RAW ==")
-        print(post)
-        break
+    try:
+        profile = "tai.ngo.308279"
+        cookies = "cookies.json"
+        for post in get_posts(profile, pages=1, cookies=cookies, options={"allow_extra_requests": True}):
+            print("== RAW ==")
+            print(post)
+            break
+    except Exception as e:
+        print("Lỗi khi test profile mặc định:", e)
     return {"message": "API đang chạy ok"}
