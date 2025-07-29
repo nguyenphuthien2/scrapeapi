@@ -31,7 +31,7 @@ def latest_post(profile: str, limit: int = 1, cookies: str = "cookies.json") -> 
     cookie_path = _resolve_cookie_path(cookies)
     if not cookie_path:
         raise FileNotFoundError("cookies.json not found in project root hoặc /etc/secrets")
-
+    logger.info(">>> USING COOKIE FILE: %s", cookie_path)
     start_url = f"https://mbasic.facebook.com/{profile}?v=timeline"
     gen = get_posts(
         profile,
