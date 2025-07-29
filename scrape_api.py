@@ -1,8 +1,10 @@
-# scrape_api.py  — v1.2.1 (clean)
+# scrape_api.py — v1.3 – Thêm hỗ trợ proxy_url
+# Giữ nguyên từ v1.2.1, thêm param proxy_url và set_proxy nếu có
+
 import os, json, logging
 from typing import List
 from fastapi import FastAPI, Query, HTTPException
-from facebook_scraper import get_posts, _scraper
+from facebook_scraper import get_posts, _scraper, set_proxy
 
 logger = logging.getLogger("uvicorn.error")
 
@@ -40,7 +42,7 @@ def latest_post(profile: str, limit: int = 1, cookies: str = "cookies.json") -> 
         base_url="https://mbasic.facebook.com",
         start_url=start_url,
         options={"allow_extra_requests": True,
-                 "posts_per_page": 30,},
+                 "posts_per_page": 30},
     )
 
     posts: List[dict] = []
@@ -64,8 +66,13 @@ def scrape(
     profile: str = Query(..., description="Username hoặc ID"),
     limit: int = Query(1, ge=1, le=5),
     cookies: str = Query("cookies.json"),
+    proxy_url: str = Query(None, description="Tùy chọn proxy dạng http://user:pass@host:port")
 ):
     try:
+        if proxy_url:
+            set_proxy(proxy_url)
+            logger.info(">>> USING PROXY: %s", proxy_url)
+
         return latest_post(profile, limit, cookies)
     except FileNotFoundError as e:
         raise HTTPException(status_code=500, detail=str(e))
