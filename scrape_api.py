@@ -32,14 +32,15 @@ def latest_post(profile: str, limit: int = 1, cookies: str = "cookies.json") -> 
     if not cookie_path:
         raise FileNotFoundError("cookies.json not found in project root hoặc /etc/secrets")
     logger.info(">>> USING COOKIE FILE: %s", cookie_path)
-    start_url = f"https://mbasic.facebook.com/{profile}?v=timeline"
+    start_url = f"https://mbasic.facebook.com/{profile}"
     gen = get_posts(
         profile,
-        pages=3,
+        pages=7,
         cookies=cookie_path,
         base_url="https://mbasic.facebook.com",
         start_url=start_url,
-        options={"allow_extra_requests": True},
+        options={"allow_extra_requests": True,
+                 "posts_per_page": 30,},
     )
 
     posts: List[dict] = []
