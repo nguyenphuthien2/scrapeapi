@@ -1,3 +1,4 @@
 fastapi==0.110.0
 uvicorn[standard]==0.29.0
 facebook-scraper==0.2.59
+lxml_html_clean==0.1.1
