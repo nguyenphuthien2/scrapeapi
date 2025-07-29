@@ -35,11 +35,11 @@ def latest_post(profile: str, limit: int = 1, cookies: str = "cookies.json") -> 
     start_url = f"https://mbasic.facebook.com/{profile}?v=timeline"
     gen = get_posts(
         profile,
-        pages=1,
+        pages=3,
         cookies=cookie_path,
         base_url="https://mbasic.facebook.com",
         start_url=start_url,
-        options={"allow_extra_requests": False},
+        options={"allow_extra_requests": True},
     )
 
     posts: List[dict] = []
